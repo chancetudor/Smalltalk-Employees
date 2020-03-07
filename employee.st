@@ -12,7 +12,26 @@ Object subclass: Employee [
 
 	init [
 		<category: 'initialization'>
-		firstName := ''
-		lastName := ''
+		firstName := 'Joe'.
+		lastName := 'Test'.
+	]
+
+	printOn: stream [
+		<category: 'printing'>
+		super printOn: stream.
+		stream nextPutAll: ' with name: '.
+		firstName printOn: stream.
+		stream nextPutAll: ' '.
+		lastName printOn: stream.
+	]
+
+	"getInfo [
+
+	]"
+
+	getEarning [
+		| earnings |
+		earnings := 0.
+		^earnings
 	]
 ]

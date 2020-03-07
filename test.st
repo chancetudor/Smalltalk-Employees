@@ -1,1 +1,2 @@
-a := Employee new
+a := Employee new.
+a printNl.
