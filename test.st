@@ -1,2 +1,3 @@
-a := Employee new.
-a printNl.
+Test := Employee new.
+Test firstName: 'Chance'
+Test lastName: 'Tudor'

@@ -6,32 +6,54 @@ Object subclass: Employee [
 		<category: 'instance creation'>
 		| tempEmployee |
 		tempEmployee := super new.
-		tempEmployee init.
+		"tempEmployee init."
 		^tempEmployee
 	]
 
-	init [
+	Employee >> firstName:fName [
+		<category: 'accessor'>
+		^firstName := fName
+	]
+
+	Employee >> lastName:lName [
+		<category: 'accessor'>
+		^lastName := lName
+	]
+
+	firstName [
+		<category: 'accessor'>
+		^firstName
+	]
+
+	lastName [
+		<category: 'accessor'>
+		^lastName
+	]
+
+	"init [
 		<category: 'initialization'>
 		firstName := 'Joe'.
 		lastName := 'Test'.
-	]
+	]"
 
 	printOn: stream [
 		<category: 'printing'>
 		super printOn: stream.
-		stream nextPutAll: ' with name: '.
+		"stream nextPutAll: ' with name: '.
 		firstName printOn: stream.
 		stream nextPutAll: ' '.
-		lastName printOn: stream.
+		lastName printOn: stream."
 	]
 
 	"getInfo [
-
-	]"
+		| name |
+		name := 'Test'.
+		^name
+	]
 
 	getEarning [
 		| earnings |
 		earnings := 0.
 		^earnings
-	]
+	]"
 ]
