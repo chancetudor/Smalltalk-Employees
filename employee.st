@@ -1,59 +1,65 @@
 Object subclass: Employee [
-	| firstName lastName |
+	| firstName lastName earnings type |
 	<comment: 'I am the base class for other types of employees'>
 
 	Employee class >> new [
 		<category: 'instance creation'>
 		| tempEmployee |
 		tempEmployee := super new.
-		"tempEmployee init."
+		tempEmployee init.
 		^tempEmployee
 	]
 
-	Employee >> firstName:fName [
-		<category: 'accessor'>
-		^firstName := fName
-	]
-
-	Employee >> lastName:lName [
-		<category: 'accessor'>
-		^lastName := lName
-	]
-
-	firstName [
-		<category: 'accessor'>
-		^firstName
-	]
-
-	lastName [
-		<category: 'accessor'>
-		^lastName
-	]
-
-	"init [
+	init [
 		<category: 'initialization'>
-		firstName := 'Joe'.
-		lastName := 'Test'.
-	]"
-
-	printOn: stream [
-		<category: 'printing'>
-		super printOn: stream.
-		"stream nextPutAll: ' with name: '.
-		firstName printOn: stream.
-		stream nextPutAll: ' '.
-		lastName printOn: stream."
+		firstName := ''.
+		lastName := ''.
+		earnings := 0.
 	]
 
-	"getInfo [
+	getInfo [
+		<category: 'accessor'>
 		| name |
-		name := 'Test'.
+		name := firstName, ' ', lastName.
 		^name
 	]
 
 	getEarning [
-		| earnings |
-		earnings := 0.
+		<category: 'accessor'>
 		^earnings
-	]"
+	]
+
+	setEarning: money [
+		<category: 'accessor'>
+		earnings := money.
+	]
+
+	setFirstName: fName [
+		<category: 'accessor'>
+		firstName := fName.
+	]
+
+	setLastName: lName [
+		<category: 'accessor'>
+		lastName := lName.
+	]
+
+	getFirstName [
+		<category: 'accessor'>
+		^firstName
+	]
+
+	getLastName [
+		<category: 'accessor'>
+		^lastName
+	]
+
+	printOn: stream [
+		<category: 'printing'>
+		super printOn: stream.
+		stream nextPutAll: ' with name: '.
+		firstName printOn: stream.
+		stream nextPutAll: ' '.
+		lastName printOn: stream.
+	]
 ]
