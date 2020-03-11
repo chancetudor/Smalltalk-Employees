@@ -17,7 +17,7 @@ Employee subclass: HourlyEmployee [
 		earnings := 0.
 		hours := 0.
 		hourlyRate := 0.
-		type := 'Hourly Employee'.
+		type := 'Hourly employee'.
 	]
 
 	printOn: stream [
@@ -31,10 +31,12 @@ Employee subclass: HourlyEmployee [
 
 	getInfo [
 		<category: 'accessor'>
-		| name type string |
+		| name line1 line2 string |
 		name := firstName, ' ', lastName.
-		type := 'Hourly Employee'.
-		string := type, ':', ' ', name.
+		line1 := type, ':', ' ', name.
+		line2 := 'hours worked: ', hours asString,
+			', hourly rate: ', hourlyRate asString.
+		string := line1, Character nl asString, line2.
 		^string
 	]
 
