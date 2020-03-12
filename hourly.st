@@ -41,7 +41,21 @@ Employee subclass: HourlyEmployee [
 	]
 
 	getEarning [
-		<category: 'accessor'>
+		"first 40 hours is paid exactly at the hourly rate,
+		next 10 hours (40 to 50) is paid at 1.5 times the hourly rate,
+		and any hours over 50 is paid at 2.0 times the hourly rate."
+		(hours <= 40)
+			ifTrue: [ earnings := hours * hourlyRate ].
+		(hours > 40 & (hours <= 50))
+			ifTrue: [
+				earnings := ((hours - 40) * (hourlyRate * 1.5))
+					+ (40 * hourlyRate)
+			].
+		(hours > 50)
+			ifTrue: [
+				earnings := ((hours - 50) * (hourlyRate * 2)) +
+					(10 * (hourlyRate * 1.5)) + (hourlyRate * 40)
+			].
 		^earnings
 	]
 
