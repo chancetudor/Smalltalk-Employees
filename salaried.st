@@ -1,0 +1,50 @@
+Employee subclass: SalariedEmployee [
+	| weeklySalary |
+	<comment: 'I am an inherited class for salaried employees'>
+
+	SalariedEmployee class >> new [
+		<category: 'instance creation'>
+		| tempEmployee |
+		tempEmployee := super new.
+		tempEmployee init.
+		^tempEmployee
+	]
+
+	init [
+		<category: 'initialization'>
+		firstName := ''.
+		lastName := ''.
+		earnings := 0.0.
+		weeklySalary := 0.0.
+		type := 'Salaried employee'.
+	]
+
+	printOn: stream [
+		<category: 'printing'>
+		type printOn: stream.
+		stream nextPutAll: ': '.
+		firstName printOn: stream.
+		stream nextPutAll: ' '.
+		lastName printOn: stream.
+	]
+
+	getInfo [
+		<category: 'accessor'>
+		| name line1 line2 string |
+		name := firstName, ' ', lastName.
+		line1 := type, ':', ' ', name.
+		line2 := 'weekly salary: ', weeklySalary asString.
+		string := line1, Character nl asString, line2.
+		^string
+	]
+
+	getEarning [
+		<category: 'accessor'>
+		^weeklySalary
+	]
+
+	setWeeklySalary: ws [
+		<category: 'accessor'>
+		weeklySalary := ws.
+	]
+]

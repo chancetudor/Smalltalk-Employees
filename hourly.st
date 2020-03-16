@@ -14,9 +14,9 @@ Employee subclass: HourlyEmployee [
 		<category: 'initialization'>
 		firstName := ''.
 		lastName := ''.
-		earnings := 0.
-		hours := 0.
-		hourlyRate := 0.
+		earnings := 0.0.
+		hours := 0.0.
+		hourlyRate := 0.0.
 		type := 'Hourly employee'.
 	]
 
