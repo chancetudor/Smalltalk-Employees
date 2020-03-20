@@ -43,7 +43,7 @@ Employee subclass: SalariedEmployee [
 		^weeklySalary
 	]
 
-	setWeeklySalary: ws [
+	setEarngin: ws [
 		<category: 'accessor'>
 		weeklySalary := ws.
 	]

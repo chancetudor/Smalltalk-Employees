@@ -15,6 +15,7 @@ Object subclass: Employee [
 		firstName := ''.
 		lastName := ''.
 		earnings := 0.
+		type := ''.
 	]
 
 	getInfo [

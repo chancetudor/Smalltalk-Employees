@@ -35,10 +35,6 @@ Employee subclass: CommissionEmployee [
 		| name line1 line2 string |
 		name := firstName, ' ', lastName.
 		line1 := type, ':', ' ', name.
-		"TODO: maybe make these floats again?"
-		"minSal := minSal asFloat."
-		"sales := sales asFloat."
-		"commRate := commRate asFloat."
 		line2 := 'minimum salary: ', minSal asString,
 			', sales amount: ', sales asString,
 			', commission rate: ', commRate printString.
@@ -47,7 +43,6 @@ Employee subclass: CommissionEmployee [
 	]
 
 	getEarning [
-		"TODO: fix setprecision of computed"
 		| computed |
 		computed := (sales * commRate) truncateTo: 0.01.
 		(computed < minSal) ifTrue: [ ^minSal ].
