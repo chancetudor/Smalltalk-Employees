@@ -37,7 +37,7 @@ Employee subclass: HourlyEmployee [
 		line2 := 'hours worked: ', hours asString,
 			', hourly rate: ', hourlyRate asString.
 		string := line1, Character nl asString, line2.
-		^string
+		Transcript show: string; cr.
 	]
 
 	getEarning [
@@ -56,7 +56,8 @@ Employee subclass: HourlyEmployee [
 				earnings := ((hours - 50) * (hourlyRate * 2)) +
 					(10 * (hourlyRate * 1.5)) + (hourlyRate * 40)
 			].
-		^earnings
+		"TODO: Maybe take out the 'transcript show:' bit"
+		Transcript show: 'earned: $'. ^earnings
 	]
 
 	setHours: hrs [

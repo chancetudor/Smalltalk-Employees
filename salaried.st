@@ -35,15 +35,15 @@ Employee subclass: SalariedEmployee [
 		line1 := type, ':', ' ', name.
 		line2 := 'weekly salary: ', weeklySalary asString.
 		string := line1, Character nl asString, line2.
-		^string
+		Transcript show: string; cr.
 	]
 
 	getEarning [
 		<category: 'accessor'>
-		^weeklySalary
+		Transcript show: 'earned: $'. ^weeklySalary
 	]
 
-	setEarngin: ws [
+	setEarning: ws [
 		<category: 'accessor'>
 		weeklySalary := ws.
 	]

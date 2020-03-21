@@ -34,19 +34,20 @@ Employee subclass: CommissionEmployee [
 		<category: 'accessor'>
 		| name line1 line2 string |
 		name := firstName, ' ', lastName.
+		"commRate := (commRate * 100) truncateTo: 0.01."
 		line1 := type, ':', ' ', name.
 		line2 := 'minimum salary: ', minSal asString,
 			', sales amount: ', sales asString,
-			', commission rate: ', commRate printString.
+			', commission rate: ', ((commRate * 100) truncateTo: 0.01) asString, '%'.
 		string := line1, Character nl asString, line2.
-		^string
+		Transcript show: string; cr.
 	]
 
 	getEarning [
-		| computed |
-		computed := (sales * commRate) truncateTo: 0.01.
-		(computed < minSal) ifTrue: [ ^minSal ].
-		^computed
+		"| computed |"
+		earnings := (sales * commRate) truncateTo: 0.01.
+		(earnings < minSal) ifTrue: [ Transcript show: 'earned: '. ^minSal ].
+		Transcript show: 'earned: $'. ^earnings
 	]
 
 	setMinSal: ms [
