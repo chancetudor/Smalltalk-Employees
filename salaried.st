@@ -35,11 +35,15 @@ Employee subclass: SalariedEmployee [
 		line1 := type, ':', ' ', name.
 		line2 := 'weekly salary: ', weeklySalary asString.
 		string := line1, Character nl asString, line2.
+		"TODO: Maybe take out the 'transcript show:' bit?
+		maybe put in payroll.st instead"
 		Transcript show: string; cr.
 	]
 
 	getEarning [
 		<category: 'accessor'>
+		"TODO: Maybe take out the 'transcript show:' bit?
+		maybe put in payroll.st instead"
 		Transcript show: 'earned: $'. ^weeklySalary
 	]
 
