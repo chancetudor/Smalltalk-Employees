@@ -18,6 +18,15 @@ Object subclass: Employee [
 		type := ''.
 	]
 
+	printOn: stream [
+		<category: 'printing'>
+		super printOn: stream.
+		stream nextPutAll: ' with name: '.
+		firstName printOn: stream.
+		stream nextPutAll: ' '.
+		lastName printOn: stream.
+	]
+
 	getInfo [
 		<category: 'accessor'>
 		| name |
@@ -28,11 +37,6 @@ Object subclass: Employee [
 	getEarning [
 		<category: 'accessor'>
 		^earnings
-	]
-
-	setEarning: money [
-		<category: 'accessor'>
-		earnings := money.
 	]
 
 	setFirstName: fName [
@@ -53,14 +57,5 @@ Object subclass: Employee [
 	getLastName [
 		<category: 'accessor'>
 		^lastName
-	]
-
-	printOn: stream [
-		<category: 'printing'>
-		super printOn: stream.
-		stream nextPutAll: ' with name: '.
-		firstName printOn: stream.
-		stream nextPutAll: ' '.
-		lastName printOn: stream.
 	]
 ]

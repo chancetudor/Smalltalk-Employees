@@ -1,5 +1,4 @@
 Employee subclass: SalariedEmployee [
-	| weeklySalary |
 	<comment: 'I am an inherited class for salaried employees'>
 
 	SalariedEmployee class >> new [
@@ -15,7 +14,6 @@ Employee subclass: SalariedEmployee [
 		firstName := ''.
 		lastName := ''.
 		earnings := 0.0.
-		weeklySalary := 0.0.
 		type := 'Salaried employee'.
 	]
 
@@ -33,7 +31,7 @@ Employee subclass: SalariedEmployee [
 		| name line1 line2 string |
 		name := firstName, ' ', lastName.
 		line1 := type, ':', ' ', name.
-		line2 := 'weekly salary: ', weeklySalary asString.
+		line2 := 'weekly salary: ', earnings asString.
 		string := line1, Character nl asString, line2.
 		"QUESTION: Maybe take out the 'transcript show:' bit?
 		maybe put in payroll.st instead"
@@ -44,11 +42,11 @@ Employee subclass: SalariedEmployee [
 		<category: 'accessor'>
 		"QUESTION: Maybe take out the 'transcript show:' bit?
 		maybe put in payroll.st instead"
-		Transcript show: 'earned: $'. ^weeklySalary
+		Transcript show: 'earned: $'. ^earnings
 	]
 
 	setEarning: ws [
 		<category: 'accessor'>
-		weeklySalary := ws.
+		earnings := ws.
 	]
 ]
