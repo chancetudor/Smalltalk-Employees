@@ -37,7 +37,7 @@ Employee subclass: HourlyEmployee [
 		line2 := 'hours worked: ', hours asString,
 			', hourly rate: ', hourlyRate asString.
 		string := line1, Character nl asString, line2.
-		"TODO: Maybe take out the 'transcript show:' bit?
+		"QUESTION: Maybe take out the 'transcript show:' bit?
 		maybe put in payroll.st instead"
 		Transcript show: string; cr.
 	]
@@ -58,7 +58,7 @@ Employee subclass: HourlyEmployee [
 				earnings := ((hours - 50) * (hourlyRate * 2)) +
 					(10 * (hourlyRate * 1.5)) + (hourlyRate * 40)
 			].
-			"TODO: Maybe take out the 'transcript show:' bit?
+			"QUESTION: Maybe take out the 'transcript show:' bit?
 			maybe put in payroll.st instead"
 		Transcript show: 'earned: $'. ^earnings
 	]

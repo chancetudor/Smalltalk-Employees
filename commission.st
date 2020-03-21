@@ -39,7 +39,7 @@ Employee subclass: CommissionEmployee [
 			', sales amount: ', sales asString,
 			', commission rate: ', ((commRate * 100) truncateTo: 0.01) asString, '%'.
 		string := line1, Character nl asString, line2.
-		"TODO: Maybe take out the 'transcript show:' bit?
+		"QUESTION: Maybe take out the 'transcript show:' bit?
 		maybe put in payroll.st instead"
 		Transcript show: string; cr.
 	]
@@ -47,7 +47,7 @@ Employee subclass: CommissionEmployee [
 	getEarning [
 		earnings := (sales * commRate) truncateTo: 0.01.
 		(earnings < minSal) ifTrue: [ Transcript show: 'earned: '. ^minSal ].
-		"TODO: Maybe take out the 'transcript show:' bit?
+		"QUESTION: Maybe take out the 'transcript show:' bit?
 		maybe put in payroll.st instead"
 		Transcript show: 'earned: $'. ^earnings
 	]
