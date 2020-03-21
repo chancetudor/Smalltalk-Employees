@@ -4,4 +4,5 @@ fs := FileStream open: Smalltalk arguments first mode: FileStream read.
   line := fs upTo: Character cr.
   Transcript show: line.
 ].
-"TODO: PARSE FILE, CALL SUBCLASSES' METHODS"
+"TODO: PARSE FILE, CALL SUBCLASSES' METHODS
+	CTRL + SHIFT + T FOR TODOS"
