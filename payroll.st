@@ -1,3 +1,7 @@
+[ self thrower ] on: Exception do: [ :e |
+    Transcript show: e messageText
+  ]
+
 fs := FileStream open: Smalltalk arguments first mode: FileStream read.
 [fs atEnd] whileFalse: [
   | line |
