@@ -36,31 +36,29 @@ Employee subclass: HourlyEmployee [
 		line1 := type, ':', ' ', name.
 		line2 := 'hours worked: ', hours asString,
 			', hourly rate: ', hourlyRate asString.
-		string := line1, Character nl asString, line2.
-		"QUESTION: Maybe take out the 'transcript show:' bit?
-		maybe put in payroll.st instead"
-		Transcript show: string; cr.
+		string := line1, Character nl asString, line2, Character nl asString,
+			'earned $', (self getEarning) asString.
+		^string
 	]
 
 	getEarning [
+		<category: 'accessor'>
 		"first 40 hours is paid exactly at the hourly rate,
 		next 10 hours (40 to 50) is paid at 1.5 times the hourly rate,
 		and any hours over 50 is paid at 2.0 times the hourly rate."
-		(hours <= 40)
-			ifTrue: [ earnings := hours * hourlyRate ].
-		(hours > 40 & (hours <= 50))
+		(hours asNumber <= 40)
+			ifTrue: [ earnings := hours asNumber * hourlyRate asNumber ].
+		(hours asNumber > 40 & (hours asNumber <= 50))
 			ifTrue: [
-				earnings := ((hours - 40) * (hourlyRate * 1.5))
-					+ (40 * hourlyRate)
+				earnings := ((hours asNumber - 40) * (hourlyRate asNumber * 1.5))
+					+ (40 * hourlyRate asNumber)
 			].
-		(hours > 50)
+		(hours asNumber > 50)
 			ifTrue: [
-				earnings := ((hours - 50) * (hourlyRate * 2)) +
-					(10 * (hourlyRate * 1.5)) + (hourlyRate * 40)
+				earnings := ((hours asNumber - 50) * (hourlyRate asNumber * 2)) +
+					(10 * (hourlyRate asNumber * 1.5)) + (hourlyRate asNumber * 40)
 			].
-			"QUESTION: Maybe take out the 'transcript show:' bit?
-			maybe put in payroll.st instead"
-		Transcript show: 'earned: $'. ^earnings
+		^earnings asNumber
 	]
 
 	setHours: hrs [

@@ -31,18 +31,15 @@ Employee subclass: SalariedEmployee [
 		| name line1 line2 string |
 		name := firstName, ' ', lastName.
 		line1 := type, ':', ' ', name.
-		line2 := 'weekly salary: ', earnings asString.
-		string := line1, Character nl asString, line2.
-		"QUESTION: Maybe take out the 'transcript show:' bit?
-		maybe put in payroll.st instead"
-		Transcript show: string; cr.
+		line2 := 'weekly salary: ', earnings.
+		string := line1, Character nl asString, line2, Character nl asString,
+			'earned $', (self getEarning) asString.
+		^string
 	]
 
 	getEarning [
 		<category: 'accessor'>
-		"QUESTION: Maybe take out the 'transcript show:' bit?
-		maybe put in payroll.st instead"
-		Transcript show: 'earned: $'. ^earnings
+		^earnings asNumber
 	]
 
 	setEarning: ws [

@@ -37,19 +37,17 @@ Employee subclass: CommissionEmployee [
 		line1 := type, ':', ' ', name.
 		line2 := 'minimum salary: ', minSal asString,
 			', sales amount: ', sales asString,
-			', commission rate: ', ((commRate * 100) truncateTo: 0.01) asString, '%'.
-		string := line1, Character nl asString, line2.
-		"QUESTION: Maybe take out the 'transcript show:' bit?
-		maybe put in payroll.st instead"
-		Transcript show: string; cr.
+			', commission rate: ', ((commRate asNumber * 100) truncateTo: 0.01) asString, '%'.
+		string := line1, Character nl asString, line2, Character nl asString,
+			'earned $', (self getEarning) asString.
+		^string
 	]
 
 	getEarning [
-		earnings := (sales * commRate) truncateTo: 0.01.
-		(earnings < minSal) ifTrue: [ Transcript show: 'earned: '. ^minSal ].
-		"QUESTION: Maybe take out the 'transcript show:' bit?
-		maybe put in payroll.st instead"
-		Transcript show: 'earned: $'. ^earnings
+		<category: 'accessor'>
+		earnings := ((sales asNumber * commRate asNumber) truncateTo: 0.01) asString.
+		(earnings asNumber < minSal asNumber) ifTrue: [ ^minSal asNumber ].
+		^earnings asNumber
 	]
 
 	setMinSal: ms [
