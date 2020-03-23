@@ -35,9 +35,9 @@ Employee subclass: CommissionEmployee [
 		| name line1 line2 string |
 		name := firstName, ' ', lastName.
 		line1 := type, ':', ' ', name.
-		line2 := 'minimum salary: ', minSal asString,
-			', sales amount: ', sales asString,
-			', commission rate: ', ((commRate asNumber * 100) truncateTo: 0.01) asString, '%'.
+		line2 := 'minimum salary: ', (minSal asNumber asExactFraction asScaledDecimal: 2) asString,
+			', sales amount: ', (sales asNumber asExactFraction asScaledDecimal: 2) asString,
+			', commission rate: ', ((commRate asNumber * 100) asExactFraction asScaledDecimal: 2) asString, '%'.
 		string := line1, Character nl asString, line2, Character nl asString,
 			'earned $', (self getEarning) asString.
 		^string
@@ -46,8 +46,11 @@ Employee subclass: CommissionEmployee [
 	getEarning [
 		<category: 'accessor'>
 		earnings := ((sales asNumber * commRate asNumber) truncateTo: 0.01) asString.
-		(earnings asNumber < minSal asNumber) ifTrue: [ ^minSal asNumber ].
-		^earnings asNumber
+		(earnings asNumber < minSal asNumber)
+			ifTrue: [
+				^minSal asNumber asExactFraction asScaledDecimal: 2
+			].
+		^earnings asNumber asExactFraction asScaledDecimal: 2
 	]
 
 	setMinSal: ms [

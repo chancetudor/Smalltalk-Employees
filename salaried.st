@@ -31,7 +31,7 @@ Employee subclass: SalariedEmployee [
 		| name line1 line2 string |
 		name := firstName, ' ', lastName.
 		line1 := type, ':', ' ', name.
-		line2 := 'weekly salary: ', earnings.
+		line2 := 'weekly salary: ', (earnings asNumber asExactFraction asScaledDecimal: 2) asString.
 		string := line1, Character nl asString, line2, Character nl asString,
 			'earned $', (self getEarning) asString.
 		^string
@@ -39,7 +39,7 @@ Employee subclass: SalariedEmployee [
 
 	getEarning [
 		<category: 'accessor'>
-		^earnings asNumber
+		^earnings asNumber asExactFraction asScaledDecimal: 2
 	]
 
 	setEarning: ws [

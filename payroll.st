@@ -1,5 +1,8 @@
 | fs line parts empColl action op thresh |
 empColl := OrderedCollection new.
+action := Smalltalk arguments second.
+"op := Smalltalk arguments third.
+thresh := Smalltalk arguments fourth."
 fs := FileStream open: Smalltalk arguments first mode: FileStream read.
 	"TODO: add exception handling"
 	"on: Exception
@@ -9,9 +12,6 @@ fs := FileStream open: Smalltalk arguments first mode: FileStream read.
 		e signal.
 	]"
 	"TODO: print usage message if # args incorrect"
-action := Smalltalk arguments second.
-"op := Smalltalk arguments third.
-thresh := Smalltalk arguments fourth."
 [fs atEnd] whileFalse: [
 	line := fs upTo: Character nl.
 	parts := line substrings. "parts: OrderedCollection with parsed contents of line"
@@ -20,8 +20,6 @@ thresh := Smalltalk arguments fourth."
 			Salaried := SalariedEmployee new.
 			Salaried setFirstName: (parts at: 2).
 			Salaried setLastName: (parts at: 3).
-			"TODO: fix string --> decimal conversion"
-			"Salaried setEarning: [ :parts | (parts at: 4) asNumber asFixedPoint: 2 ]."
 			Salaried setEarning: (parts at: 4).
 			empColl add: Salaried.
 		].
@@ -30,7 +28,6 @@ thresh := Smalltalk arguments fourth."
 			Hourly := HourlyEmployee new.
 			Hourly setFirstName: (parts at: 2).
 			Hourly setLastName: (parts at: 3).
-			"TODO: fix string --> decimal conversion"
 			Hourly setHours: (parts at: 4).
 			Hourly setRate: (parts at: 5).
 			empColl add: Hourly.
@@ -40,7 +37,6 @@ thresh := Smalltalk arguments fourth."
 			Commission := CommissionEmployee new.
 			Commission setFirstName: (parts at: 2).
 			Commission setLastName: (parts at: 3).
-			"TODO: fix string --> decimal conversion"
 			Commission setMinSal: (parts at: 4).
 			Commission setSales: (parts at: 5).
 			Commission setRate: (parts at: 6).
@@ -58,16 +54,37 @@ thresh := Smalltalk arguments fourth."
 
 (action = 'total' or: [action = 'avg'])
 	ifTrue: [
-		| total avg |
+		| total avg return |
 		total := 0.0.
+		avg := 0.0.
 		empColl do: [ :empColl | total := total + (empColl getEarning) ].
 		(action = 'total')
-			ifTrue: [ 'Total payment is $', total ]
+			ifTrue: [
+				return := 'Total payment is $', total asString.
+				Transcript show: return; cr.
+			]
 			ifFalse: [
-				avg := total / (empColl size).
-				'Average payment per employee is $', avg
+				avg := total / (empColl size) asExactFraction asScaledDecimal: 2.
+				return := 'Average payment per employee is $', avg asString.
+				Transcript show: return; cr.
 			].
 	].
+
+(action = 'min' or: [action = 'max'])
+	ifTrue: [
+		| min max |
+		min := 0.0.
+		max := 0.0.
+		"TODO: include operators"
+		(op = nil)
+			ifTrue: [
+				'yes' printNl.
+			]
+			ifFalse: [
+
+			].
+	].
+
 "iterates through employee collection array"
 "empColl do:
 	[ :empColl |

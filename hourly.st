@@ -34,8 +34,8 @@ Employee subclass: HourlyEmployee [
 		| name line1 line2 string |
 		name := firstName, ' ', lastName.
 		line1 := type, ':', ' ', name.
-		line2 := 'hours worked: ', hours asString,
-			', hourly rate: ', hourlyRate asString.
+		line2 := 'hours worked: ', (hours asNumber asExactFraction asScaledDecimal: 2) asString,
+			', hourly rate: ', (hourlyRate asNumber asExactFraction asScaledDecimal: 2) asString.
 		string := line1, Character nl asString, line2, Character nl asString,
 			'earned $', (self getEarning) asString.
 		^string
@@ -58,7 +58,7 @@ Employee subclass: HourlyEmployee [
 				earnings := ((hours asNumber - 50) * (hourlyRate asNumber * 2)) +
 					(10 * (hourlyRate asNumber * 1.5)) + (hourlyRate asNumber * 40)
 			].
-		^earnings asNumber
+		^earnings asNumber asExactFraction asScaledDecimal: 2
 	]
 
 	setHours: hrs [
