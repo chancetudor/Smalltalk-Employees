@@ -8,8 +8,8 @@ args := Smalltalk getArgc.
 		usage := 'Usage: -f payroll.st employee_file action',
 			Character nl asString, 'or', Character nl asString,
 			'Usage: -f payroll.st employee_file action operator threshold',
-				Character nl asString, validActions,
-				Character nl asString, validOps.
+			Character nl asString, validActions,
+			Character nl asString, validOps.
 		Transcript show: usage; cr.
 		ObjectMemory quit: -1.
 	].
@@ -55,6 +55,11 @@ inFile := FileStream open: Smalltalk arguments first mode: FileStream read ifFai
 			empColl add: Commission.
 		].
 ].
+(empColl size == 0)
+	ifTrue: [
+		Transcript show: 'There are no employees'; cr.
+		ObjectMemory quit: 1.
+	].
 (args == 2)
 	ifTrue: [
 		(action = 'print')
@@ -65,12 +70,6 @@ inFile := FileStream open: Smalltalk arguments first mode: FileStream read ifFai
 			ifTrue: [
 				| count |
 				count := 'There are ', empColl size asString, ' employees'.
-				(empColl size == 0)
-					ifTrue: [
-						count := 'There are no employees'.
-						Transcript show: count; cr.
-						ObjectMemory quit: 1.
-					].
 				Transcript show: count; cr.
 			].
 		(action = 'total' or: [action = 'avg'])
@@ -121,8 +120,40 @@ inFile := FileStream open: Smalltalk arguments first mode: FileStream read ifFai
 						Transcript show: minEmp getInfo; cr.
 					].
 			].
-	].
-(args == 4)
-	ifTrue: [
+	]
+	ifFalse: [ "args include operations and thresholds"
+		| validEmps earning |
+		thresh := thresh asNumber asExactFraction asScaledDecimal: 2.
+		validEmps := OrderedCollection new.
+		(action = 'print')
+			ifTrue: [
+				empColl do: [ :empColl |
+					earning := empColl getEarning.
+					(op = 'eq') "FIXME: not adding employees to validEmps idt"
+						ifTrue: [
+							(earning = thresh) ifTrue: [ validEmps add: empColl. ]
+						].
+					"(op = 'ne')
+						ifTrue: [
 
+						].
+					(op = 'gt')
+						ifTrue: [
+
+						].
+					(op = 'ge')
+						ifTrue: [
+
+						].
+					(op = 'lt')
+						ifTrue: [
+
+						].
+					(op = 'le')
+						ifTrue: [
+
+						]."
+				].
+				validEmps do: [ :validEmps | Transcript show: validEmps getInfo; cr. ].
+			].
 	].
