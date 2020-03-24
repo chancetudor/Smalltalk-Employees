@@ -1,19 +1,31 @@
-| fs line parts empColl action op thresh |
+| inFile empColl args action op thresh |
 empColl := OrderedCollection new.
+args := Smalltalk getArgc.
+(args == 2 or: [args == 4])
+	ifFalse: [
+		validActions := 'Valid actions: count print min max total avg'.
+		validOps := 'Valid operators: eq ne gt ge lt le'.
+		usage := 'Usage: -f payroll.st employee_file action',
+			Character nl asString, 'or', Character nl asString,
+			'Usage: -f payroll.st employee_file action operator threshold',
+				Character nl asString, validActions,
+				Character nl asString, validOps.
+		Transcript show: usage; cr.
+		ObjectMemory quit: -1.
+	].
 action := Smalltalk arguments second.
-"op := Smalltalk arguments third.
-thresh := Smalltalk arguments fourth."
-fs := FileStream open: Smalltalk arguments first mode: FileStream read.
-	"TODO: add exception handling"
-	"on: Exception
-	do: [
-		e := Exception new.
-		e messageText: 'Unable to open ', fileName asString, ' for reading'.
-		e signal.
-	]"
-	"TODO: print usage message if # args incorrect"
-[fs atEnd] whileFalse: [
-	line := fs upTo: Character nl.
+(args == 4)
+	ifTrue: [
+		op := Smalltalk arguments third.
+		thresh := Smalltalk arguments fourth.
+	].
+inFile := FileStream open: Smalltalk arguments first mode: FileStream read ifFail: [
+	Transcript show: 'Error: could not open file ', Smalltalk arguments first; cr.
+	ObjectMemory quit: -2.
+].
+[inFile atEnd] whileFalse: [
+	| line parts |
+	line := inFile upTo: Character nl.
 	parts := line substrings. "parts: OrderedCollection with parsed contents of line"
 	(parts includes: 'salaried')
 		ifTrue: [
@@ -43,50 +55,74 @@ fs := FileStream open: Smalltalk arguments first mode: FileStream read.
 			empColl add: Commission.
 		].
 ].
-
-(action = 'count')
+(args == 2)
 	ifTrue: [
-		| count |
-		count := 'There are ', empColl size asString, ' employees'.
-		(empColl size = 0) ifTrue: [ count := 'There are no employees' ].
-		Transcript show: count; cr.
-	].
-
-(action = 'total' or: [action = 'avg'])
-	ifTrue: [
-		| total avg return |
-		total := 0.0.
-		avg := 0.0.
-		empColl do: [ :empColl | total := total + (empColl getEarning) ].
-		(action = 'total')
+		(action = 'print')
 			ifTrue: [
-				return := 'Total payment is $', total asString.
-				Transcript show: return; cr.
-			]
-			ifFalse: [
-				avg := total / (empColl size) asExactFraction asScaledDecimal: 2.
-				return := 'Average payment per employee is $', avg asString.
-				Transcript show: return; cr.
+				empColl do: [ :empColl | Transcript show: empColl getInfo; cr. ].
+			].
+		(action = 'count')
+			ifTrue: [
+				| count |
+				count := 'There are ', empColl size asString, ' employees'.
+				(empColl size == 0)
+					ifTrue: [
+						count := 'There are no employees'.
+						Transcript show: count; cr.
+						ObjectMemory quit: 1.
+					].
+				Transcript show: count; cr.
+			].
+		(action = 'total' or: [action = 'avg'])
+			ifTrue: [
+				| total avg return |
+				total := 0.0.
+				avg := 0.0.
+				empColl do: [ :empColl | total := total + (empColl getEarning) ].
+				(action = 'total')
+					ifTrue: [
+						return := 'Total payment is $', total asString.
+						Transcript show: return; cr.
+					]
+					ifFalse: [ "action = avg"
+						avg := total / (empColl size) asExactFraction asScaledDecimal: 2.
+						return := 'Average payment per employee is $', avg asString.
+						Transcript show: return; cr.
+					].
+			].
+		(action = 'min' or: [action = 'max'])
+			ifTrue: [
+				| min max maxEmp minEmp |
+				min := empColl first getEarning.
+				max := empColl first getEarning.
+				(action = 'max')
+					ifTrue: [
+						empColl do:
+							[ :empColl |
+								currMax := empColl getEarning.
+								(currMax > max)
+									ifTrue: [
+										max := currMax.
+										maxEmp := empColl. "employee w/ max earnings"
+									].
+							].
+						Transcript show: maxEmp getInfo; cr.
+					]
+					ifFalse: [ "find min instead"
+						empColl do:
+							[ :empColl |
+								currMin := empColl getEarning.
+								(currMin < min)
+									ifTrue: [
+										min := currMin.
+										minEmp := empColl. "employee w/ min earnings"
+									]
+							].
+						Transcript show: minEmp getInfo; cr.
+					].
 			].
 	].
-
-(action = 'min' or: [action = 'max'])
+(args == 4)
 	ifTrue: [
-		| min max |
-		min := 0.0.
-		max := 0.0.
-		"TODO: include operators"
-		(op = nil)
-			ifTrue: [
-				'yes' printNl.
-			]
-			ifFalse: [
 
-			].
 	].
-
-"iterates through employee collection array"
-"empColl do:
-	[ :empColl |
-		Transcript show: empColl getInfo; cr.
-	]."
