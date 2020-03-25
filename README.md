@@ -5,7 +5,10 @@ This is an assigment for my Programming Languages class in which we had to read 
 Usage notes are contained in payroll.st but explained here for clarity:
 
 Usage: gst employee.st salaried.st hourly.st commission.st -f payroll.st employee_data_file action
+
 or
+
 Usage: gst employee.st salaried.st hourly.st commission.st -f payroll.st employee_data_file action operator threshold
+
 Valid actions: count print min max total avg 
 Valid operators: eq ne gt ge lt le
