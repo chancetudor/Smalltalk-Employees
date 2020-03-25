@@ -1,7 +1,99 @@
-| inFile empColl args action op thresh |
-empColl := OrderedCollection new.
-args := Smalltalk getArgc.
-(args == 2 or: [args == 4])
+Object subclass: Employees [
+	| empColl |
+	<comment: 'Class to deal with actions requested by user for employee data file'>
+
+	Employees class >> new [
+		<category: 'instance creation'>
+		| temp |
+		temp := super new.
+		temp init.
+		^temp
+	]
+
+	init [
+		<category: 'initialization'>
+		empColl := OrderedCollection new.
+	]
+
+	count: list [
+		| sizeColl |
+		empColl := list.
+		sizeColl := 'There are ', empColl size asString, ' employees'.
+		Transcript show: sizeColl; cr.
+	]
+
+	print: list [
+		| size i |
+		empColl := list.
+		size := empColl size.
+		i := 1.
+		empColl do:
+			[ :empColl |
+				Transcript show: empColl getInfo; cr.
+				(i = size) "for formatting purposes"
+					ifTrue: [ ^nil ]
+					ifFalse: [ Transcript cr ].
+				i := i + 1.
+			].
+	]
+
+	min: list [
+		| min currMin minEmp |
+		empColl := list.
+		min := empColl first getEarning.
+		empColl do:
+			[ :empColl |
+				currMin := empColl getEarning.
+				(currMin < min)
+					ifTrue: [
+						min := currMin.
+						minEmp := empColl. "employee w/ min earnings"
+					]
+			].
+		Transcript show: minEmp getInfo; cr.
+	]
+
+	max: list [
+		| max currMax maxEmp |
+		empColl := list.
+		max := empColl first getEarning.
+		empColl do:
+			[ :empColl |
+				currMax := empColl getEarning.
+				(currMax > max)
+					ifTrue: [
+						max := currMax.
+						maxEmp := empColl.
+					].
+			].
+		Transcript show: maxEmp getInfo; cr.
+	]
+
+	total: list [
+		| total return |
+		empColl := list.
+		total := 0.0.
+		empColl do: [ :empColl | total := total + (empColl getEarning) ].
+		return := 'Total payment is $', total asString.
+		Transcript show: return; cr.
+	]
+
+	avg: list [
+		| total avg return |
+		empColl := list.
+		total := 0.0.
+		empColl do: [ :empColl | total := total + (empColl getEarning) ].
+		avg := total / (empColl size) asExactFraction asScaledDecimal: 2.
+		return := 'Average payment per employee is $', avg asString.
+		Transcript show: return; cr.
+	]
+]
+
+| inFile fullEmps argCount action op thresh |
+fullEmps := OrderedCollection new. "stores all employees from data file"
+empColl := Employees new. "used for the actions requested"
+argCount := Smalltalk getArgc.
+(argCount == 2 or: [argCount == 4])
 	ifFalse: [
 		validActions := 'Valid actions: count print min max total avg'.
 		validOps := 'Valid operators: eq ne gt ge lt le'.
@@ -14,13 +106,13 @@ args := Smalltalk getArgc.
 		ObjectMemory quit: -1.
 	].
 action := Smalltalk arguments second.
-(args == 4)
+(argCount == 4)
 	ifTrue: [
 		op := Smalltalk arguments third.
 		thresh := Smalltalk arguments fourth.
 	].
 inFile := FileStream open: Smalltalk arguments first mode: FileStream read ifFail: [
-	Transcript show: 'Error: could not open file ', Smalltalk arguments first; cr.
+	Transcript show: 'Unable to open ', Smalltalk arguments first, ' for reading'; cr.
 	ObjectMemory quit: -2.
 ].
 [inFile atEnd] whileFalse: [
@@ -30,130 +122,63 @@ inFile := FileStream open: Smalltalk arguments first mode: FileStream read ifFai
 	(parts includes: 'salaried')
 		ifTrue: [
 			Salaried := SalariedEmployee new.
-			Salaried setFirstName: (parts at: 2).
-			Salaried setLastName: (parts at: 3).
+			Salaried setFirstName: (parts at: 2); setLastName: (parts at: 3).
 			Salaried setEarning: (parts at: 4).
-			empColl add: Salaried.
+			fullEmps add: Salaried.
 		].
 	(parts includes: 'hourly')
 		ifTrue: [
 			Hourly := HourlyEmployee new.
-			Hourly setFirstName: (parts at: 2).
-			Hourly setLastName: (parts at: 3).
-			Hourly setHours: (parts at: 4).
-			Hourly setRate: (parts at: 5).
-			empColl add: Hourly.
+			Hourly setFirstName: (parts at: 2); setLastName: (parts at: 3).
+			Hourly setHours: (parts at: 4); setRate: (parts at: 5).
+			fullEmps add: Hourly.
 		].
 	(parts includes: 'commission')
 		ifTrue: [
 			Commission := CommissionEmployee new.
-			Commission setFirstName: (parts at: 2).
-			Commission setLastName: (parts at: 3).
-			Commission setMinSal: (parts at: 4).
-			Commission setSales: (parts at: 5).
+			Commission setFirstName: (parts at: 2); setLastName: (parts at: 3).
+			Commission setMinSal: (parts at: 4); setSales: (parts at: 5).
 			Commission setRate: (parts at: 6).
-			empColl add: Commission.
+			fullEmps add: Commission.
 		].
 ].
-(empColl size == 0)
+(fullEmps size == 0)
 	ifTrue: [
 		Transcript show: 'There are no employees'; cr.
 		ObjectMemory quit: 1.
 	].
-(args == 2)
+(argCount == 2)
 	ifTrue: [
-		(action = 'print')
-			ifTrue: [
-				empColl do: [ :empColl | Transcript show: empColl getInfo; cr. ].
-			].
-		(action = 'count')
-			ifTrue: [
-				| count |
-				count := 'There are ', empColl size asString, ' employees'.
-				Transcript show: count; cr.
-			].
-		(action = 'total' or: [action = 'avg'])
-			ifTrue: [
-				| total avg return |
-				total := 0.0.
-				avg := 0.0.
-				empColl do: [ :empColl | total := total + (empColl getEarning) ].
-				(action = 'total')
-					ifTrue: [
-						return := 'Total payment is $', total asString.
-						Transcript show: return; cr.
-					]
-					ifFalse: [ "action = avg"
-						avg := total / (empColl size) asExactFraction asScaledDecimal: 2.
-						return := 'Average payment per employee is $', avg asString.
-						Transcript show: return; cr.
-					].
-			].
-		(action = 'min' or: [action = 'max'])
-			ifTrue: [
-				| min max maxEmp minEmp |
-				min := empColl first getEarning.
-				max := empColl first getEarning.
-				(action = 'max')
-					ifTrue: [
-						empColl do:
-							[ :empColl |
-								currMax := empColl getEarning.
-								(currMax > max)
-									ifTrue: [
-										max := currMax.
-										maxEmp := empColl. "employee w/ max earnings"
-									].
-							].
-						Transcript show: maxEmp getInfo; cr.
-					]
-					ifFalse: [ "find min instead"
-						empColl do:
-							[ :empColl |
-								currMin := empColl getEarning.
-								(currMin < min)
-									ifTrue: [
-										min := currMin.
-										minEmp := empColl. "employee w/ min earnings"
-									]
-							].
-						Transcript show: minEmp getInfo; cr.
-					].
-			].
+		(action = 'print') ifTrue: [ empColl print: fullEmps ].
+		(action = 'count') ifTrue: [ empColl count: fullEmps ].
+		(action = 'total') ifTrue: [ empColl total: fullEmps ].
+		(action = 'avg') ifTrue: [ empColl avg: fullEmps ].
+		(action = 'min') ifTrue: [ empColl min: fullEmps ].
+		(action = 'max') ifTrue: [ empColl max: fullEmps ].
 	]
-	ifFalse: [ "args include operations and thresholds"
-		| validEmps earning |
-		thresh := thresh asNumber asExactFraction asScaledDecimal: 2.
-		validEmps := OrderedCollection new.
-		(action = 'print')
-			ifTrue: [
-				empColl do: [ :empColl |
-					earning := empColl getEarning.
-					(op = 'eq') "FIXME: not adding employees to validEmps idt"
-						ifTrue: [
-							(earning = thresh) ifTrue: [ validEmps add: empColl. ]
-						].
-					"(op = 'ne')
-						ifTrue: [
-
-						].
-					(op = 'gt')
-						ifTrue: [
-
-						].
-					(op = 'ge')
-						ifTrue: [
-
-						].
-					(op = 'lt')
-						ifTrue: [
-
-						].
-					(op = 'le')
-						ifTrue: [
-
-						]."
-				].
-				validEmps do: [ :validEmps | Transcript show: validEmps getInfo; cr. ].
-			].
+	ifFalse: [ "argCount include operations and thresholds"
+		| threshEmps earning |
+		thresh := thresh asInteger.
+		threshEmps := OrderedCollection new. "employees whose earnings meet the threshold value"
+		fullEmps do: [ :fullEmps |
+			earning := fullEmps getEarning asInteger.
+			(op = 'eq')
+				ifTrue: [ (earning = thresh) ifTrue: [ threshEmps add: fullEmps ] ].
+			(op = 'ne')
+				ifTrue: [ (earning ~= thresh) ifTrue: [ threshEmps add: fullEmps ] ].
+			(op = 'gt')
+				ifTrue: [ (earning > thresh) ifTrue: [ threshEmps add: fullEmps ] ].
+			(op = 'ge')
+				ifTrue: [ (earning >= thresh) ifTrue: [ threshEmps add: fullEmps ] ].
+			(op = 'lt')
+				ifTrue: [ (earning < thresh) ifTrue: [ threshEmps add: fullEmps ] ].
+			(op = 'le')
+				ifTrue: [ (earning <= thresh) ifTrue: [ threshEmps add: fullEmps ] ].
+		].
+		(action = 'print') ifTrue: [ empColl print: threshEmps ].
+		(action = 'count') ifTrue: [ empColl count: threshEmps ].
+		(action = 'total') ifTrue: [ empColl total: threshEmps ].
+		(action = 'avg') ifTrue: [ empColl avg: threshEmps ].
+		(action = 'min') ifTrue: [ empColl min: threshEmps ].
+		(action = 'max') ifTrue: [ empColl max: threshEmps ].
 	].
