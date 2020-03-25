@@ -11,4 +11,5 @@ or
 Usage: gst employee.st salaried.st hourly.st commission.st -f payroll.st employee_data_file action operator threshold
 
 Valid actions: count print min max total avg 
+
 Valid operators: eq ne gt ge lt le
