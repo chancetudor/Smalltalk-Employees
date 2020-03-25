@@ -1,5 +1,4 @@
-# project6
-CS 403 project 6
+# Smalltalk Employees
 
 This is an assigment for my Programming Languages class in which we had to read in an employee data file containing types of employees, names, and salaries and respond to various commands from the user. For example, the user would write "print ge 2000," and the correct output would be all employees whose total earnings were greater than $2000.
 
